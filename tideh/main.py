@@ -21,7 +21,7 @@ from . import fit
 from . import prediction
 from . import training
 import numpy as np
-
+import sys
 
 def estimate_parameters(events, obs_time=None, window_size=4, window_stride=1, kernel_int=functions.integral_zhao,
                         p=functions.infectious_rate_tweets, values=None, **p_params):
@@ -360,8 +360,9 @@ def training_cross_validation(events_data, iterations, start_values, simplex=Non
     res = []  # training result for each iteration
     param_res = []  # final parameters for each iteration
 
-    for run in range(iterations):
+    for run in range(3): #iterations
         print("Currently at %i. iteration of CV..." % (run+1))
+        sys.stdout.flush()
         # files to keep for current training
         filter_in = np.delete(np.arange(len(events_data)), slice(run, None, iterations))
         cur_events = [events_data[i] for i in filter_in]  # filter out the event_data objects
@@ -379,6 +380,7 @@ def training_cross_validation(events_data, iterations, start_values, simplex=Non
         res.append(train_res)
         param_res.append(param)
         print("Final parameters of %i. CV: %s" % ((run+1), param))
+        sys.stdout.flush()
 
     mean_err = np.mean(error)
     median_err = np.median(error)

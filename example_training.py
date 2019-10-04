@@ -17,6 +17,7 @@ This code is developed by Sylvain Gauthier and Sebastian Rühl under the supervi
 """
 from tideh import load_events_vec
 from tideh import training_cross_validation
+import sys
 
 number_of_files = 100  # number of files to train on
 file_name_prefix = 'data/training/RT'  # file names prefix of files used for training
@@ -25,7 +26,7 @@ pred_time = 168  # prediction time (hours)
 
 # get file paths of files to use for training
 file_names = [file_name_prefix + str(i) + '.txt' for i in range(1, number_of_files + 1)]
-
+#file_names = [file_name_prefix + str(i) + '.txt' for i in range(1, 20)]
 # load events for optimized training
 events_data = []
 for file in file_names:
@@ -46,5 +47,8 @@ start_values = [0.2, 0, 0.25]
                                                              pred_time=pred_time)
 
 print("Final mean training error: %0.3f" % mean_err)
+sys.stdout.flush()
 print("Final median training error: %0.3f" % median_err)
+sys.stdout.flush()
 print("Final infectious rate parameters: " + str(param))
+sys.stdout.flush()
