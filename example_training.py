@@ -21,9 +21,10 @@ import sys
 
 number_of_files = 100  # number of files to train on
 file_name_prefix = 'data/training/RT'  # file names prefix of files used for training
-iterations = 5   # number of cross validation iterations
+iterations = 3   # number of cross validation iterations
 pred_time = 168  # prediction time (hours)
-
+print(number_of_files, iterations)
+sys.stdout.flush()
 # get file paths of files to use for training
 file_names = [file_name_prefix + str(i) + '.txt' for i in range(1, number_of_files + 1)]
 #file_names = [file_name_prefix + str(i) + '.txt' for i in range(1, 20)]
