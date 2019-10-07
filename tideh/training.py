@@ -2,7 +2,6 @@
 # Author:   Sebastian Rühl
 #
 # For license information, see LICENSE.txt
-
 """
 Implements functions for training parameters of infectious rate of the twitter model. Parameters are trained by
 minimizing the prediction error.
@@ -22,8 +21,8 @@ import numpy as np
 from scipy.optimize import minimize
 
 
-def to_minimize(x, events_data, obs_time, pred_time, e_window_size, e_window_stride, kernel_int, p, kernel,
-                dt, p_window):
+def to_minimize(x, events_data, obs_time, pred_time, e_window_size,
+                e_window_stride, kernel_int, p, kernel, dt, p_window):
     """
     Calculates training error for every given data_training set for given parameters and calculates the median training
     error used for minimization.
@@ -45,19 +44,30 @@ def to_minimize(x, events_data, obs_time, pred_time, e_window_size, e_window_str
 
     pred_errors = []
     for event_data in events_data:
-        if event_data[1][1][0] > obs_time:  # no events in observation time -> skip
+        if event_data[1][1][
+                0] > obs_time:  # no events in observation time -> skip
             continue
-        err = main.training_error(x, event_data, obs_time, pred_time, e_window_size, e_window_stride,
-                                  kernel_int, p, kernel, dt, p_window)
+        err = main.training_error(x, event_data, obs_time, pred_time,
+                                  e_window_size, e_window_stride, kernel_int,
+                                  p, kernel, dt, p_window)
         pred_errors.append(err)
 
     err_med = np.median(pred_errors)
     return err_med
 
 
-def train(start, events_data, obs_time=6, pred_time=168, e_window_size=4, e_window_stride=1,
-          kernel_int=functions.integral_zhao_vec, p=functions.infectious_rate_tweets_vec,
-          kernel=functions.kernel_zhao_vec, dt=0.1, p_window=4, simplex=None):
+def train(start,
+          events_data,
+          obs_time=6,
+          pred_time=168,
+          e_window_size=4,
+          e_window_stride=1,
+          kernel_int=functions.integral_zhao_vec,
+          p=functions.infectious_rate_tweets_vec,
+          kernel=functions.kernel_zhao_vec,
+          dt=0.1,
+          p_window=4,
+          simplex=None):
     """
     Trains parameters of infectious rate. Uses Nelder-Mead.
 
@@ -78,17 +88,21 @@ def train(start, events_data, obs_time=6, pred_time=168, e_window_size=4, e_wind
     :param simplex: array-matrix object holding initial simple matrix
     :return: see scipy.optimize.minimize documentation
     """
-    options = {
-        'initial_simplex': simplex
-    }
+    options = {'initial_simplex': simplex}
 
-    return minimize(to_minimize, start, method='Nelder-Mead', args=(
-        events_data, obs_time, pred_time, e_window_size, e_window_stride, kernel_int, p, kernel, dt, p_window),
-                    tol=1e-4, options=options)
+    return minimize(to_minimize,
+                    start,
+                    method='Nelder-Mead',
+                    args=(events_data, obs_time, pred_time, e_window_size,
+                          e_window_stride, kernel_int, p, kernel, dt,
+                          p_window),
+                    tol=1e-4,
+                    options=options)
 
 
-def to_minimize_optimized(x, events_data, obs_time, pred_time, e_window_size, e_window_stride, kernel_int, p, kernel,
-                          dt, p_window):
+def to_minimize_optimized(x, events_data, obs_time, pred_time, e_window_size,
+                          e_window_stride, kernel_int, p, kernel, dt,
+                          p_window):
     """
     Calculates training error for every given data_training set for given parameters and calculates the median training error
     used for minimization.
@@ -111,19 +125,31 @@ def to_minimize_optimized(x, events_data, obs_time, pred_time, e_window_size, e_
     """
     pred_errors = []
     for event_data in events_data:
-        if event_data[1][0][1] > obs_time:  # no events in observation time -> skip
+        if event_data[1][0][
+                1] > obs_time:  # no events in observation time -> skip
             continue
-        err = main.training_error_optimized(x, event_data, obs_time, pred_time, e_window_size, e_window_stride,
-                                            kernel_int, p, kernel, dt, p_window)
+        err = main.training_error_optimized(x, event_data, obs_time, pred_time,
+                                            e_window_size, e_window_stride,
+                                            kernel_int, p, kernel, dt,
+                                            p_window)
         pred_errors.append(err)
 
     err_med = np.median(pred_errors)
     return err_med
 
 
-def train_optimized(start, events_data, obs_time=6, pred_time=168, e_window_size=4, e_window_stride=1,
-                    kernel_int=functions.integral_zhao_vec, p=functions.infectious_rate_tweets_vec,
-                    kernel=functions.kernel_zhao_vec, dt=0.1, p_window=4, simplex=None):
+def train_optimized(start,
+                    events_data,
+                    obs_time=6,
+                    pred_time=168,
+                    e_window_size=4,
+                    e_window_stride=1,
+                    kernel_int=functions.integral_zhao_vec,
+                    p=functions.infectious_rate_tweets_vec,
+                    kernel=functions.kernel_zhao_vec,
+                    dt=0.1,
+                    p_window=4,
+                    simplex=None):
     """
     Trains parameters of infectious rate. Uses Nelder-Mead.
 
@@ -146,12 +172,13 @@ def train_optimized(start, events_data, obs_time=6, pred_time=168, e_window_size
     :param simplex: array-matrix object holding initial simple matrix
     :return: see scipy.optimize.minimize documentation
     """
-    options = {
-        'initial_simplex': simplex
-    }
+    options = {'initial_simplex': simplex}
 
-    return minimize(to_minimize_optimized, start, method='Nelder-Mead',
-                    args=(
-                        events_data, obs_time, pred_time, e_window_size, e_window_stride, kernel_int, p, kernel, dt,
-                        p_window),
-                    tol=1e-4, options=options)
+    return minimize(to_minimize_optimized,
+                    start,
+                    method='Nelder-Mead',
+                    args=(events_data, obs_time, pred_time, e_window_size,
+                          e_window_stride, kernel_int, p, kernel, dt,
+                          p_window),
+                    tol=1e-4,
+                    options=options)

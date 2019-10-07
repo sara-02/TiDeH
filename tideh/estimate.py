@@ -2,7 +2,6 @@
 # Author:   Sebastian Rühl
 #
 # For license information, see LICENSE.txt
-
 """
 Implements functions for estimating instantaneous infectious rate. Used for modeling the infectious rate of a tweet.
 
@@ -20,7 +19,11 @@ References
 from . import functions
 
 
-def estimate_infectious_rate_constant(events, t_start, t_end, kernel_integral, count_events=None):
+def estimate_infectious_rate_constant(events,
+                                      t_start,
+                                      t_end,
+                                      kernel_integral,
+                                      count_events=None):
     """
     Returns estimation of infectious rate for given events on defined interval.
     The infectious is expected to be constant on given interval.
@@ -32,14 +35,22 @@ def estimate_infectious_rate_constant(events, t_start, t_end, kernel_integral, c
     :param count_events: count of observed events in interval (used for time window approach)
     :return: estimated value for infectious rate
     """
-    kernel_int = [fol_cnt * kernel_integral(t_start - event_time, t_end - event_time) for event_time, fol_cnt in events]
+    kernel_int = [
+        fol_cnt * kernel_integral(t_start - event_time, t_end - event_time)
+        for event_time, fol_cnt in events
+    ]
     if count_events is not None:
         return count_events / sum(kernel_int)
     else:
         return (len(events)) / sum(kernel_int)
 
 
-def estimate_infectious_rate_constant_vec(event_times, follower, t_start, t_end, kernel_integral, count_events=None):
+def estimate_infectious_rate_constant_vec(event_times,
+                                          follower,
+                                          t_start,
+                                          t_end,
+                                          kernel_integral,
+                                          count_events=None):
     """
     Returns estimation of infectious rate for given event time and followers on defined interval.
     Optimized using numpy.
@@ -52,14 +63,18 @@ def estimate_infectious_rate_constant_vec(event_times, follower, t_start, t_end,
     :param count_events: count of observed events in interval (used for time window approach)
     :return: estimated values for infectious rate
     """
-    kernel_int = follower * kernel_integral(t_start - event_times, t_end - event_times)
+    kernel_int = follower * kernel_integral(t_start - event_times,
+                                            t_end - event_times)
     if count_events is not None:
         return count_events / kernel_int.sum()
     else:
         return event_times.size / kernel_int.sum()
 
 
-def estimate_infectious_rate(events, kernel_integral=functions.integral_zhao, obs_time=24, window_size=4,
+def estimate_infectious_rate(events,
+                             kernel_integral=functions.integral_zhao,
+                             obs_time=24,
+                             window_size=4,
                              window_stride=1):
     """
     Estimates infectious rate using moving time window approach.
@@ -77,16 +92,19 @@ def estimate_infectious_rate(events, kernel_integral=functions.integral_zhao, ob
     events_iterator_counting = 1  # do not count the first event (initial tweet)
 
     estimations = []
-    window_middle = []  # hold the time points of the intervals (time point in the middle of every window)
+    window_middle = [
+    ]  # hold the time points of the intervals (time point in the middle of every window)
     window_event_count = []
     count_current = 0  # current count of events in a window
     count_diff = 1  # count of events in current stride window; do not count the first event (initial tweet)
 
-    for start in range(0, obs_time - window_size + window_stride, window_stride):
+    for start in range(0, obs_time - window_size + window_stride,
+                       window_stride):
         end = start + window_size
 
         # count up current events in window and add them to to events array
-        while events_iterator < len(events) and events[events_iterator][0] < end:
+        while events_iterator < len(
+                events) and events[events_iterator][0] < end:
             events_tmp.append(events[events_iterator])
             events_iterator += 1
             count_current += 1
@@ -94,15 +112,17 @@ def estimate_infectious_rate(events, kernel_integral=functions.integral_zhao, ob
         # subtract count of events for stride interval
         count_current = count_current - count_diff
 
-        est = estimate_infectious_rate_constant(events=events_tmp,
-                                                t_start=start,
-                                                t_end=end,
-                                                kernel_integral=kernel_integral,
-                                                count_events=count_current)
+        est = estimate_infectious_rate_constant(
+            events=events_tmp,
+            t_start=start,
+            t_end=end,
+            kernel_integral=kernel_integral,
+            count_events=count_current)
 
         # count up events for length of stride window
         count_diff = 0
-        while events_iterator_counting < len(events) and events[events_iterator_counting][0] < (start + window_stride):
+        while events_iterator_counting < len(events) and events[
+                events_iterator_counting][0] < (start + window_stride):
             events_iterator_counting += 1
             count_diff += 1
 
@@ -113,8 +133,12 @@ def estimate_infectious_rate(events, kernel_integral=functions.integral_zhao, ob
     return estimations, window_event_count, window_middle
 
 
-def estimate_infectious_rate_vec(event_times, follower, kernel_integral=functions.integral_zhao_vec, obs_time=24,
-                                 window_size=4, window_stride=1):
+def estimate_infectious_rate_vec(event_times,
+                                 follower,
+                                 kernel_integral=functions.integral_zhao_vec,
+                                 obs_time=24,
+                                 window_size=4,
+                                 window_stride=1):
     """
     Estimates infectious rate using moving time window approach.
     Optimized using numpy and vectorized approach.
@@ -132,18 +156,19 @@ def estimate_infectious_rate_vec(event_times, follower, kernel_integral=function
     window_middle = []
     window_event_count = []
 
-    for start in range(0, obs_time - window_size + window_stride, window_stride):
+    for start in range(0, obs_time - window_size + window_stride,
+                       window_stride):
         end = start + window_size
 
         mask = event_times < end  # all events up until end of current interval
         count_current = get_event_count(event_times, start, end)
-
-        est = estimate_infectious_rate_constant_vec(event_times[mask],
-                                                    follower[mask],
-                                                    t_start=start,
-                                                    t_end=end,
-                                                    kernel_integral=kernel_integral,
-                                                    count_events=count_current)
+        est = estimate_infectious_rate_constant_vec(
+            event_times[mask],
+            follower[mask],
+            t_start=start,
+            t_end=end,
+            kernel_integral=kernel_integral,
+            count_events=count_current)
 
         window_middle.append(start + window_size / 2)
         window_event_count.append(count_current)

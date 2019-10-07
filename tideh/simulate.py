@@ -2,7 +2,6 @@
 # Author:   Sebastian Rühl
 #
 # For license information, see LICENSE.txt
-
 """
 Implements functions for simulating time dependent Hawkes process following the Twitter model.
 
@@ -53,11 +52,16 @@ def solve_integral(ti, X, kernel, p, events, dt, Tmax):
     partial_sum = 0
     last_partial_sum = 0
     t = ti
-    lambda_0 = p(t) * sum([fol_count * kernel(t - event_time) for event_time, fol_count in events])
+    lambda_0 = p(t) * sum([
+        fol_count * kernel(t - event_time) for event_time, fol_count in events
+    ])
     lambda_1 = None
     while partial_sum < X:
         t += dt
-        lambda_1 = p(t) * sum([fol_count * kernel(t - event_time) for event_time, fol_count in events])
+        lambda_1 = p(t) * sum([
+            fol_count * kernel(t - event_time)
+            for event_time, fol_count in events
+        ])
         partial_sum += dt * (lambda_0 + lambda_1) / 2
 
         if partial_sum < X:
@@ -72,8 +76,14 @@ def solve_integral(ti, X, kernel, p, events, dt, Tmax):
     return t - dt + s
 
 
-def simulate_time_rescaling(runtime, kernel=functions.kernel_zhao, p=functions.infectious_rate_tweets, dt=0.01,
-                            follower_pool=None, int_fol_cnt=10000, follower_mean=200, split=0.015):
+def simulate_time_rescaling(runtime,
+                            kernel=functions.kernel_zhao,
+                            p=functions.infectious_rate_tweets,
+                            dt=0.01,
+                            follower_pool=None,
+                            int_fol_cnt=10000,
+                            follower_mean=200,
+                            split=0.015):
     """
     Simulates time dependent Hawkes process using time rescaling.
 
@@ -112,8 +122,14 @@ def simulate_time_rescaling(runtime, kernel=functions.kernel_zhao, p=functions.i
     return events
 
 
-def simulate_hawkes_time_increment(runtime, dt=0.01, lbd=functions.kernel_zhao, p=functions.infectious_rate_tweets,
-                                   start_time=0, int_fol_cnt=10000, follower_mean=200, split=0.02):
+def simulate_hawkes_time_increment(runtime,
+                                   dt=0.01,
+                                   lbd=functions.kernel_zhao,
+                                   p=functions.infectious_rate_tweets,
+                                   start_time=0,
+                                   int_fol_cnt=10000,
+                                   follower_mean=200,
+                                   split=0.02):
     """
     Simulates time dependent Hawkes process using extended follower count simulation.
     Keeps track of all interesting intermediate values.
@@ -138,12 +154,18 @@ def simulate_hawkes_time_increment(runtime, dt=0.01, lbd=functions.kernel_zhao, 
     for i in range(1, n):
         cur_interval = i * dt
         x = rand.uniform()
-        memory_effect = sum([fol_cnt * lbd(cur_interval - event_time) for event_time, fol_cnt in events])
-        llambda = p(cur_interval + start_time) * memory_effect * dt  # intensity for current interval
+        memory_effect = sum([
+            fol_cnt * lbd(cur_interval - event_time)
+            for event_time, fol_cnt in events
+        ])
+        llambda = p(cur_interval + start_time
+                    ) * memory_effect * dt  # intensity for current interval
 
         lambda_t.append(llambda)
         memory_effect_t.append(memory_effect)
 
         if x < llambda:  # event occurred
-            events.append((int(cur_interval), rand_followers_extended(int_fol_cnt, follower_mean, split)))
+            events.append((int(cur_interval),
+                           rand_followers_extended(int_fol_cnt, follower_mean,
+                                                   split)))
     return events, lambda_t, memory_effect_t

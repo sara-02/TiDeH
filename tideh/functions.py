@@ -2,7 +2,6 @@
 # Author:   Sebastian Rühl
 #
 # For license information, see LICENSE.txt
-
 """
 Implements basic mathematical expression of different functions used for estimation, prediction and simulation.
 This includes the memory kernel, integral of memory kernel and the infectious rate.
@@ -36,7 +35,7 @@ def kernel_zhao(s, s0=0.08333, theta=0.242):
         if s <= s0:
             return c0
         else:
-            return c0 * (s / s0) ** (-(1. + theta))
+            return c0 * (s / s0)**(-(1. + theta))
     else:
         return 0
 
@@ -55,7 +54,7 @@ def kernel_zhao_vec(s, s0=0.08333, theta=0.242):
     res = np.copy(s)
     res[s < 0] = 0
     res[(s <= s0) & (s >= 0)] = c0
-    res[s > s0] = c0 * (res[s > s0] / s0) ** (-(1. + theta))
+    res[s > s0] = c0 * (res[s > s0] / s0)**(-(1. + theta))
     return res
 
 
@@ -74,7 +73,7 @@ def kernel_primitive_zhao(x, s0=0.08333, theta=0.242):
     elif x <= s0:
         return c0 * x
     else:
-        return c0 * (s0 + (s0 * (1 - (x / s0) ** -theta)) / theta)
+        return c0 * (s0 + (s0 * (1 - (x / s0)**-theta)) / theta)
 
 
 def kernel_primitive_zhao_vec(x, s0=0.08333, theta=0.242):
@@ -92,7 +91,7 @@ def kernel_primitive_zhao_vec(x, s0=0.08333, theta=0.242):
     res = np.copy(x)
     res[x < 0] = 0
     res[(x <= s0) & (x >= 0)] = c0 * res[(x <= s0) & (x >= 0)]
-    res[x > s0] = c0 * (s0 + (s0 * (1 - (res[x > s0] / s0) ** -theta)) / theta)
+    res[x > s0] = c0 * (s0 + (s0 * (1 - (res[x > s0] / s0)**-theta)) / theta)
     return res
 
 
@@ -106,7 +105,8 @@ def integral_zhao(x1, x2, s0=0.08333, theta=0.242):
     :param theta: empirically determined constant
     :return: integral of Zhao function
     """
-    return kernel_primitive_zhao(x2, s0, theta) - kernel_primitive_zhao(x1, s0, theta)
+    return kernel_primitive_zhao(x2, s0, theta) - kernel_primitive_zhao(
+        x1, s0, theta)
 
 
 def integral_zhao_vec(x1, x2, s0=0.08333, theta=0.242):
@@ -122,10 +122,18 @@ def integral_zhao_vec(x1, x2, s0=0.08333, theta=0.242):
     :param theta: empirically determined constant
     :return: integrals of Zhao function
     """
-    return kernel_primitive_zhao_vec(x2, s0, theta) - kernel_primitive_zhao_vec(x1, s0, theta)
+    return kernel_primitive_zhao_vec(
+        x2, s0, theta) - kernel_primitive_zhao_vec(x1, s0, theta)
 
 
-def infectious_rate_tweets(t, p0=0.001, r0=0.424, phi0=0.125, taum=2., t0=0, tm=24, bounds=None):
+def infectious_rate_tweets(t,
+                           p0=0.001,
+                           r0=0.424,
+                           phi0=0.125,
+                           taum=2.,
+                           t0=0,
+                           tm=24,
+                           bounds=None):
     """
     Alternative form of infectious rate from paper. Supports bounds for r0 and taum. Bounds should be passed as an array
     in the form of [(lower r0, lower taum), (upper r0, upper taum)].
@@ -145,11 +153,20 @@ def infectious_rate_tweets(t, p0=0.001, r0=0.424, phi0=0.125, taum=2., t0=0, tm=
         if not (bounds[0][0] < r0 < bounds[1][0]):
             r0 = max(bounds[0][0], bounds[1][0] * sigmoid(taum / bounds[1][0]))
         if not (bounds[0][1] < taum < bounds[1][1]):
-            taum = max(bounds[0][1], bounds[1][1] * sigmoid(taum / bounds[1][1]))
-    return p0 * (1. - r0 * sin((48 / tm) * pi * ((t + t0) / 24 + phi0))) * exp(-t / (24 * taum))
+            taum = max(bounds[0][1],
+                       bounds[1][1] * sigmoid(taum / bounds[1][1]))
+    return p0 * (1. - r0 * sin(
+        (48 / tm) * pi * ((t + t0) / 24 + phi0))) * exp(-t / (24 * taum))
 
 
-def infectious_rate_tweets_vec(t, p0=0.001, r0=0.424, phi0=0.125, taum=2., t0=0, tm=24., bounds=None):
+def infectious_rate_tweets_vec(t,
+                               p0=0.001,
+                               r0=0.424,
+                               phi0=0.125,
+                               taum=2.,
+                               t0=0,
+                               tm=24.,
+                               bounds=None):
     """
     Alternative form of infectious rate from paper. Supports bounds for r0 and taum. Bound should be passed as an array
     in the form of [(lower r0, lower taum), (upper r0, upper taum)].
@@ -170,8 +187,11 @@ def infectious_rate_tweets_vec(t, p0=0.001, r0=0.424, phi0=0.125, taum=2., t0=0,
         if not (bounds[0][0] < r0 < bounds[1][0]):
             r0 = max(bounds[0][0], bounds[1][0] * sigmoid(taum / bounds[1][0]))
         if not (bounds[0][1] < taum < bounds[1][1]):
-            taum = max(bounds[0][1], bounds[1][1] * sigmoid(taum / bounds[1][1]))
-    return p0 * (1. - r0 * np.sin((48. / tm) * np.pi * ((t + t0) / 24. + phi0))) * np.exp(-t / (24. * taum))
+            taum = max(bounds[0][1],
+                       bounds[1][1] * sigmoid(taum / bounds[1][1]))
+    return p0 * (1. - r0 * np.sin(
+        (48. / tm) * np.pi * ((t + t0) / 24. + phi0))) * np.exp(-t /
+                                                                (24. * taum))
 
 
 def sigmoid(x):

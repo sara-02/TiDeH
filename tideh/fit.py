@@ -2,7 +2,6 @@
 # Author:   Sebastian Rühl
 #
 # For license information, see LICENSE.txt
-
 """
 Provides an interface for fitting parameters of infectious rate.
 
@@ -29,7 +28,8 @@ def loss_function(params, estimates, fun, xval):
     :param xval: x axis values to estimates (time points)
     :return: array of loss values for every estimation
     """
-    return [(fun(xval[i], *params) - estimates[i]) for i in range(len(estimates))]
+    return [(fun(xval[i], *params) - estimates[i])
+            for i in range(len(estimates))]
 
 
 def fit_parameter(estimates, fun, start_values, xval):
@@ -46,7 +46,9 @@ def fit_parameter(estimates, fun, start_values, xval):
     if start_values is None:
         start_values = np.array([0, 0, 0, 1.])
 
-    return leastsq(func=loss_function, x0=start_values, args=(estimates, fun, xval))[0]
+    return leastsq(func=loss_function,
+                   x0=start_values,
+                   args=(estimates, fun, xval))[0]
 
 
 def error(estimated, fitted):
@@ -57,4 +59,7 @@ def error(estimated, fitted):
     :param fitted: fitted values
     :return: percent error
     """
-    return sum([abs(e / f - 1) for e, f in zip(estimated, fitted)]) / len(estimated)
+    if sum(fitted) == 0 and sum(estimated) == 0:
+        return 0.0
+    return sum([abs(e / f - 1)
+                for e, f in zip(estimated, fitted)]) / len(estimated)
