@@ -3,3 +3,4 @@ env*
 *.tmp
 nohup.out
 data/*
+.ipynb_checkpoints
