@@ -4,7 +4,12 @@ import subprocess
 import sys
 
 
-sub_reddit_list = ['10', '9']
+sub_reddit_list = ['26', '27']
+print("######################################")
+print("######################################")
+print(sub_reddit_list)
+sys.stdout.flush()
+print("\n\n")
 
 main_dir = os.path.join("data", "reddit_data")
 
