@@ -3,12 +3,19 @@ import os
 import subprocess
 import sys
 
-
-sub_reddit_list = ['26', '27']
-print("######################################")
-print("######################################")
+sub_reddit_list = ['28', 
+        '29',
+        '30',
+        '31',
+        '32',
+        '33',
+        '34',
+        '35',
+        '36',
+        '37']
+print("###################################")
+print("####################################")
 print(sub_reddit_list)
-sys.stdout.flush()
 print("\n\n")
 
 main_dir = os.path.join("data", "reddit_data")
@@ -43,3 +50,4 @@ finally:
     err_filename = os.path.join(main_dir, str_name + "error_list.json")
     with open(err_filename, "w") as f:
         json.dump(error_list, f, indent=True)
+
