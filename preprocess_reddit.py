@@ -20,9 +20,9 @@ for i in range(n):
     subreddit_stats[i]['total'] = len(each_reddit)
     subreddit_stats[i]['atleast_1'] = sum(
         [1 for each_post in each_reddit if len(each_post['comments']) > 0])
-    subreddit_stats[i]['atleast_4'] = sum(
-        [1 for each_post in each_reddit if len(each_post['comments']) >= 4])
-    if subreddit_stats[i]['atleast_4'] == 0:
+    subreddit_stats[i]['atleast_10'] = sum(
+        [1 for each_post in each_reddit if len(each_post['comments']) >= 10])
+    if subreddit_stats[i]['atleast_10'] == 0:
         continue
     sub_dir_path = os.path.join(input_dir_path, str(i))
     os.mkdir(sub_dir_path)
@@ -30,7 +30,7 @@ for i in range(n):
     os.mkdir(out_sub_dir_path)
     for index, each_post in enumerate(each_reddit):
         event_list = []
-        if len(each_post['comments']) < 4:
+        if len(each_post['comments']) < 10:
             continue
         event_list.append(
             str(len(each_post['comments']) + 1) + " " +
@@ -47,5 +47,5 @@ for i in range(n):
             for each_line in event_list:
                 f.write(each_line + "\n")
 
-with open(os.path.join(main_dir, "subreddit_stats.json"), "w") as f:
+with open(os.path.join(main_dir, "subreddit_stats_10.json"), "w") as f:
     json.dump(subreddit_stats, f, indent=True)
