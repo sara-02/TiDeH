@@ -4,7 +4,7 @@ import numpy as np
 import scipy.stats as stats
 from sklearn.metrics import mean_squared_error
 
-main_dir = os.path.join("data", "reddit_data", "OCT_OUTPUT")
+main_dir = os.path.join("data", "reddit_data", "NOV_OUTPUT")
 folders = []
 error = {}
 error['mse_overall'] = 0.0
@@ -59,7 +59,7 @@ error['spearman_overall'] = spr
 error['mse_overall'] = mse
 
 filesub_folder_name = os.path.join("data", "reddit_data",
-                                   "evaluation_metric.json")
+                                   "evaluation_metric_nov_10.json")
 print(filesub_folder_name)
 with open(filesub_folder_name, "w") as f:
     json.dump(error, f, indent=True)

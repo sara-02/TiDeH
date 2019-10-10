@@ -3,8 +3,8 @@ import os
 import subprocess
 import sys
 
-sub_reddit_list = ['6', '7', '8', '9', '10', '15', '16',' 17', '18', '19', '20', '21', '22', '23', '24', '25',
-        '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37']
+sub_reddit_list = ['1','2','3','4','6', '7', '8', '9','11','12','15', '16',' 17', '18', '19', '20', '22', '24', '25',
+        '26', '27', '28', '29', '30', '31', '33', '34', '35', '36', '37','38','39','41','42']
 print("###################################")
 print("####################################")
 print(sub_reddit_list)
@@ -23,7 +23,7 @@ try:
         sys.stdout.flush()
         str_name += sub_red +"_"
         for _, _, f in os.walk(
-                os.path.join("data", "reddit_data", "OCT_INPUT", sub_red)):
+                os.path.join("data", "reddit_data", "NOV_INPUT", sub_red)):
             file_list = f
         file_list = [f.split(".txt")[0] for f in file_list]
         for each_post in file_list:

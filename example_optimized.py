@@ -35,8 +35,8 @@ import os
 import json
 import sys
 
-input_path = os.path.join("data", "reddit_data", "OCT_INPUT")
-output_path = os.path.join("data", "reddit_data", "OCT_OUTPUT")
+input_path = os.path.join("data", "reddit_data", "NOV_INPUT")
+output_path = os.path.join("data", "reddit_data", "NOV_OUTPUT")
 
 parser = argparse.ArgumentParser(description='Input Params')
 parser.add_argument('--srd', help='subreddit_number')
