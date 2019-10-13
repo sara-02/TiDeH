@@ -18,7 +18,8 @@ for i in range(n):
     print(i)
     sys.stdout.flush()
     each_reddit = json.loads(data[i])
-    each_reddit = each_reddit['subreddit']
+    key = list(each_reddit.keys())[0]
+    each_reddit = each_reddit[key]
     subreddit_stats[i] = {}
     subreddit_stats[i]['total'] = len(each_reddit)
     atleast_1 = 0
