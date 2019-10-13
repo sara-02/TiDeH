@@ -30,8 +30,8 @@ for each_sub in subs:
     for each_file in files:
         with open(os.path.join(each_sub, each_file), "r") as filepointer:
             results = json.load(filepointer)
-        y_pred = results['from_to_pred'] + 1.0
-        y_ground = results['original_to_pred'] + 1.0
+        y_pred = results['from_to_pred'] + 1.009
+        y_ground = results['original_to_pred'] + 1.009
         l_sub_pred.append(y_pred)
         l_sub_ground.append(y_ground)
         l_overall_pred.append(y_pred)
@@ -53,10 +53,14 @@ n_pred = np.array(l_overall_pred)
 n_ground = np.array(l_overall_ground)
 tau, _ = stats.kendalltau(n_ground, n_pred)
 spr, _ = stats.spearmanr(n_ground, n_pred)
-mse = mean_squared_error(np.log(n_ground), np.log(n_pred))
+n_ground_log = np.log(n_ground)
+n_pred_log = np.log(n_pred)
+p_err = sum(np.absolute((n_ground_log-n_pred_log)/n_ground_log))/len(n_ground_log)
+mse = mean_squared_error(n_ground_log, n_pred_log)
 error['kendall_overall'] = tau
 error['spearman_overall'] = spr
 error['mse_overall'] = mse
+error["percent_log_abs"] = p_err
 
 filesub_folder_name = os.path.join("data", "reddit_data",
                                    "evaluation_metric_nov_10.json")

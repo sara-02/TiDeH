@@ -35,8 +35,8 @@ for i in range(n):
         d1 = datetime.fromtimestamp(each_post['created_utc'])
         event_list_temp = []
         for each_comment in each_post['comments']:
-            d2 = datetime.fromtimestamp(each_post['created_utc'])
-            if d2 > d1+timedelta(days=30):
+            d2 = datetime.fromtimestamp(each_comment['created_utc'])
+            if d2 > d1 + timedelta(days=30):
                 break
             td = d2 - d1
             td = td.total_seconds() / 3600  # in hours    
