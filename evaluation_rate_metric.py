@@ -25,8 +25,8 @@ for each_sub in folders:
         wc = data['window_event_count']
         for e, w in zip(es, wc):
             if e == 0 and w == 0:
-                continue
-            l_es.append(e + 1.0)
+                break
+            l_es.append(int(e) + 1.0)
             l_wc.append(w + 1.0)
 
 np_es = np.array(l_es)
