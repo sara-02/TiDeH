@@ -136,16 +136,19 @@ def estimate_infectious_rate_constant_vec(event_times,
         return event_times.size / kernel_int.sum()
 
 
-input_path = os.path.join("data", "reddit_data", "NOV_INPUT")
-output_path = os.path.join("data", "reddit_data", "NOV_OUTPUT_HOUR")
-
 parser = argparse.ArgumentParser(description='Input Params')
+parser.add_argument('--m', help='month, either oct or nov')
 parser.add_argument('--srd', help='subreddit_number')
 parser.add_argument('--fl', help='file_number')
 parser.add_argument('--ot', help='observation time in hrs')
 parser.add_argument('--pt', help='prediction time in hrs')
 
 args = parser.parse_args()
+month = args.m if args.m else 'nov'
+month = month.upper()
+input_path = os.path.join("data", "reddit_data", month + "_INPUT")
+output_path = os.path.join("data", "reddit_data", month + "_OUTPUT_HOUR")
+
 subreddit_number = args.srd
 filename = args.fl + ".txt"
 filename = os.path.join(input_path, subreddit_number, filename)
@@ -154,8 +157,8 @@ pred_time = int(args.pt) if args.pt else 744  # 24 * 31
 
 (_, start_time), (event_times, follower) = load_events_vec(filename)
 
-window_size = 1
-window_stride = 1
+window_size = 1  # one hour each (hourly rate).
+window_stride = 1  # one hour each (hourly rate).
 filt_obs = obs_time <= event_times
 filt_obs = event_times <= pred_time
 estimations, window_event_count, _ = estimate_infectious_rate_vec(

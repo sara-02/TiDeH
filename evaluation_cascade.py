@@ -7,9 +7,15 @@ import os
 import json
 import numpy as np
 import scipy.stats as stats
+import argparse
+
+parser = argparse.ArgumentParser(description='Input Params')
+parser.add_argument('--m', help='month, either oct or nov')
+args = parser.parse_args()
+month = args.m if args.m else 'nov'
 
 main_dir = os.path.join("data", "reddit_data")
-output_dir = os.path.join(main_dir, "NOV_OUTPUT")
+output_dir = os.path.join(main_dir, month.upper() + "_OUTPUT")
 
 folders = []
 feature_list_input = []
@@ -54,7 +60,7 @@ results = {}
 results["tau_cascade_overall"] = tau
 results["spr_cascade_overall"] = spr
 result_filename = os.path.join(main_dir,
-                               "evaluation_cascade_k" + str(k) + ".json")
+                               "evaluation_cascade_k" + str(k) + month +".json")
 with open(result_filename,"w") as f:
 	json.dump(results, f, indent=True)
 

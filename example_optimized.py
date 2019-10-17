@@ -35,25 +35,24 @@ import os
 import json
 import sys
 
-input_path = os.path.join("data", "reddit_data", "NOV_INPUT")
-output_path = os.path.join("data", "reddit_data", "NOV_OUTPUT")
-
 parser = argparse.ArgumentParser(description='Input Params')
+parser.add_argument('--m', help='month, either oct or nov')
 parser.add_argument('--srd', help='subreddit_number')
 parser.add_argument('--fl', help='file_number')
 parser.add_argument('--ot', help='observation time in hrs')
 parser.add_argument('--pt', help='prediction time in hrs')
 
 args = parser.parse_args()
+month = args.m if args.m else 'nov'
+month = month.upper()
+input_path = os.path.join("data", "reddit_data", month + "_INPUT")
+output_path = os.path.join("data", "reddit_data", month + "_OUTPUT")
 subreddit_number = args.srd
 filename = args.fl + ".txt"
 filename = os.path.join(input_path, subreddit_number, filename)
 obs_time = int(args.ot) if args.ot else 24
 pred_time = int(args.pt) if args.pt else 744  # 24 * 31
 
-# filename = 'data/example/sample_file.txt'
-# obs_time = 48  # observation time of 2 days
-# pred_time = 168  # predict for one week
 
 # the number of retweets is not necessary for the further steps
 # make sure that all times are loaded in the correct time unit (hours)

@@ -7,13 +7,20 @@ import json
 import os
 import subprocess
 import sys
+import argparse
 
+parser = argparse.ArgumentParser(description='Input Params')
+parser.add_argument('--m', help='month, either oct or nov')
+args = parser.parse_args()
+month = args.m if args.m else 'nov'
 
 main_dir = os.path.join("data", "reddit_data")
-input_dir = os.path.join(main_dir,"NOV_INPUT")
+input_dir = os.path.join(main_dir, month.upper() + "_INPUT")
 
 # ToDo: use os.walk instead of manual addition of folder names.
 # sub_reddit_list = ['1','2',<list of folder number>]
+# Example for Nov folder
+sub_reddit_list = ['1']
 print("#####################")
 print("#####################")
 print(sub_reddit_list)
@@ -37,8 +44,8 @@ try:
         for each_post in file_list:
             print(each_post)
             sys.stdout.flush()
-            cmd = "python3 for_each_hour.py --srd {0} --fl {1}".format(
-                sub_red, each_post)
+            cmd = "python3 for_each_hour.py --m {0} --srd {1} --fl {2}".format(
+                month, sub_red, each_post)
             returned = subprocess.call(cmd, shell=True)
             if returned:
                 error_list.append((sub_red, each_post))

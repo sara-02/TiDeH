@@ -8,8 +8,16 @@ import os
 import numpy as np
 import scipy.stats as stats
 from sklearn.metrics import mean_squared_error
+import argparse
 
-main_dir = os.path.join("data", "reddit_data", "NOV_OUTPUT")
+parser = argparse.ArgumentParser(description='Input Params')
+parser.add_argument('--m', help='month, either oct or nov')
+args = parser.parse_args()
+month = args.m if args.m else 'nov'
+
+main_dir = os.path.join("data", "reddit_data")
+output_dir = os.path.join(main_dir, month.upper() + "_OUTPUT")
+
 folders = []
 error = {}
 error['mse_overall'] = 0.0
@@ -21,7 +29,7 @@ error['spearman_sub'] = {}
 l_overall_pred = []
 l_overall_ground = []
 
-for r, _, _ in os.walk(main_dir):
+for r, _, _ in os.walk(output_dir):
     folders.append(r)
 subs = folders[1:]
 
@@ -60,7 +68,8 @@ tau, _ = stats.kendalltau(n_ground, n_pred)
 spr, _ = stats.spearmanr(n_ground, n_pred)
 n_ground_log = np.log(n_ground)
 n_pred_log = np.log(n_pred)
-p_err = sum(np.absolute((n_ground_log-n_pred_log)/n_ground_log))/len(n_ground_log)
+p_err = sum(np.absolute(
+    (n_ground_log - n_pred_log) / n_ground_log)) / len(n_ground_log)
 mse = mean_squared_error(n_ground_log, n_pred_log)
 error['kendall_overall'] = tau
 error['spearman_overall'] = spr
@@ -68,7 +77,7 @@ error['mse_overall'] = mse
 error["percent_log_abs"] = p_err
 
 filesub_folder_name = os.path.join("data", "reddit_data",
-                                   "evaluation_metric_nov_10.json")
+                                   "evaluation_metric_" + month + "_10.json")
 print(filesub_folder_name)
 with open(filesub_folder_name, "w") as f:
     json.dump(error, f, indent=True)

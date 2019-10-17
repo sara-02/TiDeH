@@ -8,10 +8,16 @@ import json
 from datetime import datetime
 import numpy as np
 from sklearn.metrics import mean_squared_error
+import argparse
+
+parser = argparse.ArgumentParser(description='Input Params')
+parser.add_argument('--m', help='month, either oct or nov')
+args = parser.parse_args()
+month = args.m if args.m else 'nov'
 
 main_dir = os.path.join("data", "reddit_data")
-input_dir = os.path.join(main_dir, "NOV_INPUT")
-output_dir = os.path.join(main_dir, "NOV_OUTPUT")
+input_dir = os.path.join(main_dir, month.upper() + "_INPUT")
+output_dir = os.path.join(main_dir, month.upper() + "_OUTPUT")
 
 folders = []
 bin_data = []
@@ -54,5 +60,5 @@ for b in bins:
     mse = mean_squared_error(np.log(n_ground), np.log(n_pred))
     mse_bin[b] = mse
 
-with open(os.path.join(main_dir, "mse_bin.json"), "w") as f:
+with open(os.path.join(main_dir, "evaluation_mse_bins_" + month + ".json"), "w") as f:
     json.dump(mse_bin, f, indent=True)

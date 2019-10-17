@@ -9,9 +9,15 @@ from datetime import datetime
 import numpy as np
 from sklearn.metrics import mean_squared_error
 import scipy.stats as stats
+import argparse
+
+parser = argparse.ArgumentParser(description='Input Params')
+parser.add_argument('--m', help='month, either oct or nov')
+args = parser.parse_args()
+month = args.m if args.m else 'nov'
 
 main_dir = os.path.join("data", "reddit_data")
-output_dir = os.path.join(main_dir, "NOV_OUTPUT_HOUR")
+output_dir = os.path.join(month.upper() + "_OUTPUT_HOUR")
 
 folders = []
 l_es = []
@@ -43,7 +49,7 @@ results = {}
 results["mse_rate"] = mse
 results["tau_rate"] = tau
 results["spr_rate"] = spr
-result_filename = os.path.join(main_dir, "evaluation_rates.json")
+result_filename = os.path.join(main_dir, "evaluation_rates_" + month + ".json")
 with open(result_filename, "w") as f:
     json.dump(results, f, indent=True)
 print(mse, tau, spr)
