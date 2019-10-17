@@ -1,3 +1,8 @@
+"""
+Author: Sarah Masud
+Copyright (c): Sarah Masud
+"""
+
 import json
 import os
 import numpy as np

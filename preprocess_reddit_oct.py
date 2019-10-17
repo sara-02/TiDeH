@@ -1,10 +1,15 @@
+"""
+Author: Sarah Masud
+Copyright (c): Sarah Masud
+"""
+
 import json
 import numpy as np
 from datetime import datetime, timedelta
 import os
 
 main_dir = os.path.join("data", "reddit_data")
-with open(os.path.join(main_dir, "selected_discussion.jsonlist"), "r") as f:
+with open(os.path.join(main_dir, "selected_discussion_oct.jsonlist"), "r") as f:
     data = f.readlines()
 n = len(data)
 print(n)
@@ -12,6 +17,8 @@ print(n)
 subreddit_stats = {}
 input_dir_path = os.path.join("data", "reddit_data", "OCT_INPUT")
 output_dir_path = os.path.join("data", "reddit_data", "OCT_OUTPUT")
+output_hour_dir_path = os.path.join("data", "reddit_data", "NOV_OUTPUT_HOUR")
+
 for i in range(n):
     print(i)
     each_reddit = json.loads(data[i])
@@ -28,6 +35,8 @@ for i in range(n):
     os.mkdir(sub_dir_path)
     out_sub_dir_path = os.path.join(output_dir_path, str(i))
     os.mkdir(out_sub_dir_path)
+    out_hour_sub_dir_path = os.path.join(output_hour_dir_path, str(i))
+    os.mkdir(out_hour_sub_dir_path)
     for index, each_post in enumerate(each_reddit):
         event_list = []
         if len(each_post['comments']) < 10:

@@ -1,3 +1,8 @@
+"""
+Author: Sarah Masud
+Copyright (c): Sarah Masud
+"""
+
 import json
 import os
 import subprocess
@@ -6,20 +11,22 @@ import sys
 
 main_dir = os.path.join("data", "reddit_data")
 input_dir = os.path.join(main_dir,"NOV_INPUT")
-#sub_reddit_list=["1"]
-sub_reddit_list = ['1','2','3','6', '7', '8', '9','11','12','15', '16','17', '18', '19', '20', '22', '24', '25', '26', '27', '28', '29', '30', '31', '33', '34', '35', '36', '37','38','39','41','42']
-print("###################################")
-print("####################################")
+
+# ToDo: use os.walk instead of manual addition of folder names.
+# sub_reddit_list = ['1','2',<list of folder number>]
+print("#####################")
+print("#####################")
 print(sub_reddit_list)
 print("\n\n")
 
 str_name = ''
 error_list = []
 
+# ToDo: Can be parallized at subreddit or post level.
 try:
     for sub_red in sub_reddit_list:
-        print("######################################")
-        print("######################################")
+        print("#################")
+        print("#################")
         print(sub_red)
         sys.stdout.flush()
         str_name += sub_red +"_"

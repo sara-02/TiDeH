@@ -1,3 +1,8 @@
+"""
+Original Authors: This code is developed by Sylvain Gauthier and Sebastian Rühl under the supervision of Ryota Kobayashi.
+Modified by: Sarah Masud
+"""
+
 import argparse
 import os
 import json
@@ -162,9 +167,9 @@ estimations, window_event_count, _ = estimate_infectious_rate_vec(
     window_size=window_size,
     window_stride=window_stride)
 
-results ={}
-results["estimations"]=estimations
-results["window_event_count"]=window_event_count
+results = {}
+results["estimations"] = estimations
+results["window_event_count"] = window_event_count
 
 filename = args.fl + ".json"
 output_file = os.path.join(output_path, subreddit_number, filename)

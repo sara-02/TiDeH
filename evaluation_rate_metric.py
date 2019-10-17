@@ -1,3 +1,8 @@
+"""
+Author: Sarah Masud
+Copyright (c): Sarah Masud
+"""
+
 import os
 import json
 from datetime import datetime
