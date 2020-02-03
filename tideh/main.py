@@ -60,14 +60,13 @@ def estimate_parameters(events,
 
     err = fit.error(estimations,
                     [p(i, *fitted, **p_params) for i in window_middle])
-
     return fitted, err, (window_middle, estimations, window_event_count)
 
 
 def estimate_parameters_optimized(event_times,
                                   follower,
-                                  obs_time=6,
-                                  window_size=4,
+                                  obs_time=1,
+                                  window_size=1,
                                   window_stride=1,
                                   kernel_int=functions.integral_zhao_vec,
                                   p=functions.infectious_rate_tweets_vec,
@@ -104,14 +103,13 @@ def estimate_parameters_optimized(event_times,
 
     err = fit.error(estimations,
                     [p(i, *fitted, **p_params) for i in window_middle])
-
     return fitted, err, (window_middle, estimations, window_event_count)
 
 
 def predict(events,
-            obs_time=6,
-            pred_time=168,
-            window=4,
+            obs_time=1,
+            pred_time=720,
+            window=1,
             kernel=functions.kernel_zhao,
             dt=0.1,
             p=functions.infectious_rate_tweets,
@@ -172,9 +170,9 @@ def predict(events,
 
 def predict_optimized(event_times,
                       follower,
-                      obs_time=6,
-                      pred_time=168,
-                      window=4,
+                      obs_time=1,
+                      pred_time=720,
+                      window=1,
                       kernel=functions.kernel_zhao_vec,
                       dt=0.1,
                       p=functions.infectious_rate_tweets_vec,

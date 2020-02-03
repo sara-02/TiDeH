@@ -136,8 +136,8 @@ def estimate_infectious_rate(events,
 def estimate_infectious_rate_vec(event_times,
                                  follower,
                                  kernel_integral=functions.integral_zhao_vec,
-                                 obs_time=24,
-                                 window_size=4,
+                                 obs_time=1,
+                                 window_size=1,
                                  window_stride=1):
     """
     Estimates infectious rate using moving time window approach.
@@ -155,9 +155,10 @@ def estimate_infectious_rate_vec(event_times,
     estimations = []
     window_middle = []
     window_event_count = []
-
+    loop_flag = False
     for start in range(0, obs_time - window_size + window_stride,
                        window_stride):
+        loop_flag = True
         end = start + window_size
 
         mask = event_times < end  # all events up until end of current interval
@@ -173,7 +174,24 @@ def estimate_infectious_rate_vec(event_times,
         window_middle.append(start + window_size / 2)
         window_event_count.append(count_current)
         estimations.append(est)
+    if not loop_flag:
+        start = 0
+        end = start + window_size
+        mask = event_times < end  # all events up until end of current interval
+        print("msend",event_times[mask])
+        count_current = get_event_count(event_times, start, end)
+        print(count_current)
+        est = estimate_infectious_rate_constant_vec(
+            event_times[mask],
+            follower[mask],
+            t_start=start,
+            t_end=end,
+            kernel_integral=kernel_integral,
+            count_events=count_current)
 
+        window_middle.append(start + window_size / 2)
+        window_event_count.append(count_current)
+        estimations.append(est)
     return estimations, window_event_count, window_middle
 
 

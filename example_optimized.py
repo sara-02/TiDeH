@@ -51,7 +51,7 @@ subreddit_number = args.srd
 filename = args.fl + ".txt"
 filename = os.path.join(input_path, subreddit_number, filename)
 obs_time = int(args.ot) if args.ot else 1
-pred_time = int(args.pt) if args.pt else 744  # 24 * 31
+pred_time = int(args.pt) if args.pt else 720  # 24 * 30
 
 
 # the number of retweets is not necessary for the further steps

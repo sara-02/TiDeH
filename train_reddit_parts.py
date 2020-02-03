@@ -14,14 +14,13 @@ parser.add_argument('--m', help='month, either oct or nov')
 args = parser.parse_args()
 month = args.m if args.m else 'nov'
 
-# ToDo: use os.walk instead of manual addition of folder names.
 # sub_reddit_list = ['1','2',<list of folder number>]
-# Example for Nov folder
-sub_reddit_list = os.listdir("data/reddit_data/NOV_INPUT")
+sub_reddit_list = os.listdir("data/reddit_data/" + month.upper() + "_INPUT")
 print("###################################")
 print("####################################")
 print(sub_reddit_list)
 print("\n\n")
+sys.stdout.flush()
 main_dir = os.path.join("data", "reddit_data")
 input_dir = os.path.join(main_dir, month.upper() + "_INPUT")
 str_name = ''

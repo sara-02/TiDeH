@@ -55,8 +55,8 @@ def load_events_vec(filename, time_factor=1, start_factor=1):
 def estimate_infectious_rate_vec(event_times,
                                  follower,
                                  kernel_integral=functions.integral_zhao_vec,
-                                 obs_time=24,
-                                 pred_time=744,
+                                 obs_time=1,
+                                 pred_time=720,
                                  window_size=1,
                                  window_stride=1):
     """
@@ -152,8 +152,8 @@ output_path = os.path.join("data", "reddit_data", month + "_OUTPUT_HOUR")
 subreddit_number = args.srd
 filename = args.fl + ".txt"
 filename = os.path.join(input_path, subreddit_number, filename)
-obs_time = int(args.ot) if args.ot else 24
-pred_time = int(args.pt) if args.pt else 744  # 24 * 31
+obs_time = int(args.ot) if args.ot else 1
+pred_time = int(args.pt) if args.pt else 720  # 24 * 30
 
 (_, start_time), (event_times, follower) = load_events_vec(filename)
 

@@ -16,7 +16,7 @@ References
 
 from scipy.optimize import leastsq
 import numpy as np
-
+import sys
 
 def loss_function(params, estimates, fun, xval):
     """
@@ -46,6 +46,11 @@ def fit_parameter(estimates, fun, start_values, xval):
     if start_values is None:
         start_values = np.array([0, 0, 0, 1.])
 
+    if len(estimates) == 1:
+        em = [estimates[0], 1, 0.000649, 1]
+        estimates = np.array(em)
+        xv = [xval[0]] * 4
+        xval = np.array(xv)
     return leastsq(func=loss_function,
                    x0=start_values,
                    args=(estimates, fun, xval))[0]
@@ -59,6 +64,10 @@ def error(estimated, fitted):
     :param fitted: fitted values
     :return: percent error
     """
+    print("error")
+    print("estimated", estimated)
+    print("fitted", fitted)
+    sys.stdout.flush()
     if sum(fitted) == 0 and sum(estimated) == 0:
         return 0.0
     return sum([abs(e / f - 1)
