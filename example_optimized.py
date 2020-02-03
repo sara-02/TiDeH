@@ -50,7 +50,7 @@ output_path = os.path.join("data", "reddit_data", month + "_OUTPUT")
 subreddit_number = args.srd
 filename = args.fl + ".txt"
 filename = os.path.join(input_path, subreddit_number, filename)
-obs_time = int(args.ot) if args.ot else 24
+obs_time = int(args.ot) if args.ot else 1
 pred_time = int(args.pt) if args.pt else 744  # 24 * 31
 
 
