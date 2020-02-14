@@ -20,7 +20,8 @@ input_dir = os.path.join(main_dir, month.upper() + "_INPUT")
 # ToDo: use os.walk instead of manual addition of folder names.
 # sub_reddit_list = ['1','2',<list of folder number>]
 # Example for Nov folder
-sub_reddit_list = ['1']
+#sub_reddit_list = ['1']
+sub_reddit_list = os.listdir("data/reddit_data/" + month.upper() + "_INPUT")
 print("#####################")
 print("#####################")
 print(sub_reddit_list)

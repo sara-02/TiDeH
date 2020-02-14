@@ -18,10 +18,13 @@ main_dir = os.path.join("data", "reddit_data")
 output_dir = os.path.join(main_dir, month.upper() + "_OUTPUT")
 
 folders = []
-feature_list_input = []
-feature_list_output = []
+l_pred = []
+l_ground = []
+f_ground = []
+f_pred = []
 k = 10
-cascade = np.array([2, 3, 4, 5]) * k
+bins = np.array([0,2, 3, 4, 5,np.inf]) * k
+m = len(bins)
 for r, _, _ in os.walk(output_dir):
     folders.append(r)
 folders = folders[1:]
@@ -30,8 +33,6 @@ for each_sub in folders:
     for _, _, f in os.walk(os.path.join(output_dir, sub_red)):
         file_list = f
     for each_file in file_list:
-        features_i = []
-        features_o = []
         with open(os.path.join(output_dir, sub_red, each_file), "r") as f:
             results = json.load(f)
         pred_count = int(results["from_to_pred"])
@@ -40,18 +41,20 @@ for each_sub in folders:
         if pred_count == 0 and ground_count == 0:
             continue
         total_ground_length = total_pred_length - pred_count + ground_count
-        feature_list_input.append(list(cascade <= total_ground_length))
-        feature_list_output.append(list(cascade <= total_pred_length))
+        f_ground.append(total_pred_length)
+        f_pred.append(total_ground_length)
 
-l_pred = []
-l_ground = []
-n = len(feature_list_input)
-for i in range(n):
-    f1 = feature_list_input[i]
-    f2 = feature_list_output[i]
-    for ground, pred in zip(f1, f2):
-        l_ground.append(ground)
-        l_pred.append(pred)
+for pred in f_pred:
+    for j in range(m-1):
+        if bins[j]<=pred<bins[j+1]:
+            l_pred.append(bins[j])
+            break
+for ground in f_ground:
+    for j in range(m-1):
+        if bins[j]<=ground<bins[j+1]:
+            l_ground.append(bins[j])
+            break
+
 np_ground = np.array(l_ground).astype(float)
 np_pred = np.array(l_pred).astype(float)
 tau, _ = stats.kendalltau(np_ground, np_pred)
